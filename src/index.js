@@ -1,82 +1,70 @@
-import React, { Component } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
-import Form from "./Form";
+import App from "./App";
+import "./App.css";
+import reportWebVitals from './reportWebVitals'
+import {BrowserRouter} from 'react-router-dom'
+//import {Provider} from 'react-redux'
+//import {store} from './redux/store'
+import {grommet, Grommet} from 'grommet'
 
-import "./styles.css";
+let posts = [
+    { id: 0, message: 'post1', likesCount: 11},
+    { id: 1, message: 'post2', likesCount: 12}
 
-class App extends Component {
-  constructor(props) {
-    super(props);
+]
+let messagesData = [
+    { id: 0, message: 'Hi' },
+    { id: 1, message: 'Wow' },
+    { id: 2, message: 'Yo' }
 
-    this.state = {
-      people: []
-    };
+]
+let dialogsData = [
+    { id: 0, name: 'Gera' },
+    { id: 1, name: 'Sveta' },
+    { id: 2, name: 'Roza' }
 
-    this.addPerson = this.addPerson.bind(this);
-    this.deletePerson = this.deletePerson.bind(this);
-  }
+]
 
-  addPerson(name, email) {
-    this.setState(prevState => ({
-      people: [...prevState.people, { name, email }]
-    }));
-  }
-
-  componentDidMount() {
-    this.getPeople();
-  }
-
-  getPeople() {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then(response => response.json())
-      .then(response => this.setState({ people: response }))
-      .catch(error => console.log(error));
-  }
-
-  deletePerson(email) {
-    return () => {
-      this.setState(prevState => ({
-        people: prevState.people.filter(person => person.email !== email)
-      }));
-    };
-  }
-
-  render() {
-    console.log(this.state);
-
-    return (
-      <div className="App">
-        <Form addPerson={this.addPerson} />
-        <table>
-          <thead>
-            <tr>
-              <th>LP</th>
-              <th>USER</th>
-              <th>EMAIL</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.state.people.map((person, index) => {
-              return (
-                <tr key={person.email}>
-                  <th>{index + 1}</th>
-                  <td>{person.name}</td>
-                  <td>{person.email}</td>
-                  <td>
-                    <button onClick={this.deletePerson(person.email)}>
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    );
-  }
+const theme = {
+    global: {
+        ...grommet.global,
+        colors: {
+            control: {'dark': 'neutral-3', 'light': 'brand'}
+        },
+        focus: {
+            outline: {
+                color: 'transparent'
+            },
+            border: {
+                color: {light: 'brand', dark: 'light-1'}
+            }
+        }
+    },
+    button: {
+        ...grommet.button,
+        color: {dark: 'light-1', light: 'brand'}
+    }
 }
 
-const rootElement = document.getElementById("root");
-ReactDOM.render(<App />, rootElement);
+ReactDOM.render(
+    <React.StrictMode>
+        <BrowserRouter>
+            {/*<Provider store={store}>*/}
+                <Grommet theme={theme}>
+                    <App posts={posts} messages={messagesData} dialogs={dialogsData} />
+                </Grommet>
+{          /*  </Provider>*/} 
+       </BrowserRouter>
+    </React.StrictMode>,
+    document.getElementById('root')
+)
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals()
+
+
+
+
